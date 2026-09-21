@@ -51,8 +51,18 @@ public class Shell {
      * Runs the Read-Eval-Print Loop of the Shell. The command "exit" ends the loop.
      */
     public void runRepl() {
-        // TODO: implement Shell.runRepl
-        throw new UnsupportedOperationException("TODO: implement Shell.runRepl");
+        java.util.Scanner scanner = new java.util.Scanner(System.in);
+        while (true) {
+            System.out.print(COMMAND_PROMPT);
+            if (!scanner.hasNextLine()) {
+                break;
+            }
+            String line = scanner.nextLine().trim();
+            if (line.equals("exit")) {
+                break;
+            }
+            executeCommand(line);
+        }
     }
 
     /**
@@ -109,8 +119,20 @@ public class Shell {
      * @throws Exception if a match class cannot be found
      */
     private static String findCommandClass(String command) throws Exception {
-        // TODO: implement Shell.findCommandClass
-        throw new UnsupportedOperationException("TODO: implement Shell.findCommandClass");
+        File dir = PATH.toFile();
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (File f : files) {
+                String name = f.getName();
+                if (name.endsWith(".class")) {
+                    String className = name.replace(".class", "");
+                    if (classNameToCommandName(className).equals(command)) {
+                        return className;
+                    }
+                }
+            }
+        }
+        throw new Exception(command + ": command not found");
     }
 
     /**
